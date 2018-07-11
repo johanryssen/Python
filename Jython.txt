@@ -1,0 +1,157 @@
+https://www.safaribooksonline.com/library/view/jython-essentials/9781449397364/ch01s02.html
+
+java -jar jython.exe
+>>> import javax.swing as swing
+>>>
+>>> win = swing.JFrame("Hi there")
+>>>
+>>> win
+javax.swing.JFrame[frame0,0,81,216x59,hidden,layout=java.awt.BorderLayout,title=Hi there,resizable,normal,
+defaultCloseOperation=HIDE_ON_CLOSE,rootPane=javax.swing.JRootPane[,8,31,200x20,
+layout=javax.swing.JRootPane$RootLayout,alignmentX=0.0,alignmentY=0.0,border=,
+flags=16777673,maximumSize=,minimumSize=,preferredSize=],rootPaneCheckingEnabled=true]
+
+>>>
+>>> win.size = (200, 200)
+>>> win.size
+java.awt.Dimension[width=200,height=200]
+>>> 
+
+>>> win.show()                # Opens a graphical window with the text "Hi there"
+>>> 
+
+## ADDING ITEMS TO THE WINDOW ##
+
+>>> field = swing.JTextField(preferredSize=(200,20))
+>>> win.contentPane.add(field)
+javax.swing.JTextField[,0,0,200x20,. . .
+>>> win.pack( )
+
+# Now type something in the graphical window
+>>> field.text                # This will print the text you typed in the window.
+u'hi to you too'
+>>>
+
+## Now, let’s put some buttons in.
+>>> names = ["Groucho", "Chico", "Harpo"]>>>
+>>> 
+
+## The actual buttons are created from the list of names using a 
+## different Python method for creating a list called a "list comprehension".
+
+>>> buttons = [swing.JButton(each) for each in names]
+>>>
+
+## Now that we have a list of buttons, we can add them to the window 
+## with the use of a simple for loop.
+
+>>> for eachButton in buttons:
+...     eachButton.preferredSize = (100, 20)
+...     win.contentPane.add(eachButton)
+...
+javax.swing.JButton[,0,0,0x0,invalid,layout...
+>>> 
+
+## Inside the loop, the code sets the preferred size of each button
+## and adds it to the window’s content pane, again using the introspection shortcuts.
+## Once all the buttons are added, we can pack  the window again.
+
+>>> win.pack( )
+>>>
+
+## But now, the window is a mess—the buttons are placed on top of each other,
+## and on top of the text field. We’ve forgotten to give the window a layout manager
+## (which is the mechanism Swing uses to automatically place items within a window).
+## No problem, we can just add it after we import the appropriate package.
+
+>>> import java.awt as awt
+>>> win.contentPane.layout = awt.FlowLayout( )
+>>> win.pack( )
+## Now it shows "Groucho", "Chico" and "Harpo" as buttons.
+
+## ADDING BEHAVIOR ##
+
+# At this point, the window should look right, but it doesn’t do anything.
+# We want it to place some text in the text field depending on what button you push.
+# First, we need to create the text we want used.
+
+>>> quotes = {"Groucho": "Say the secret word", "Chico": "Viaduct?", "Harpo": "HONK!"}
+
+This line sets up a Python dictionary.
+
+A dictionary in Python is more or less equivalent to a Java HashMap:
+a collection of key/value pairs designed to be accessed in constant time no matter which element is accessed or how large the dictionary is.
+
+Again, the Python type is well integrated with the core language, allowing the creation in one line of what would take a series of put(key, value) calls in Java.
+
+Once the text is in place, we can define a function that will perform the actual text replacement.
+
+>>> def buttonPressed(event):
+...     field.text = quotes[event.source.text]
+...
+>>>
+
+This pair of lines defines a function to be called when a button is pressed.
+The event parameter in the first line will be the actual Java Event object created from the mouseclick.
+The line of code inside the function uses Jython shortcuts,
+looks up the quotes dictionary with the text of the source button, and sets the field with that value. 
+
+The Java equivalent would be something like:
+    field.setText(quotes.get((javax.swing.JTextField) event.getSource( )).getText( )))
+
+We hope that we aren’t losing credibility by suggesting that the Python example is a little bit easier to read.
+Finally, we associate the function with the buttons.
+
+>>> for eachButton in buttons:
+...     eachButton.actionPerformed = buttonPressed
+...
+>>>
+
+This for loop puts the buttonPressed function in the actionPerformed slot for each button.
+This is another Jython shortcut—as used in Java, buttons don’t have an actionPerformed attribute.
+Instead, actionPerformed is the method defined inside an ActionListener interface.
+
+When you assign to actionPerformed Jython performs the appropriate call to the button’s addActionListener( ) method,
+such that the function buttonPressed is triggered when the action is performed.
+Also notice that Jython allows us to use a function as the righthand side of an assignment statement, we’re using the function as a value.
+At this point, the window should work, and look more or less like Figure 1-1.
+
+Of course, Jython does not have to be run interactively. The code that we used in the interactive shell session is shown as a standalone file in Example 1-1.
+The code is equivalent to the preceding session, but we did clean it up some, removing duplicate calls to pack( ),
+putting import and definitions where they would more typically come in a Python module, adding code to exit Jython when the window closes,
+and refactoring button creation into a separate function.
+
+Example 1-1 is typical of a Jython script as it would actually be written.
+
+--------------------------------------
+
+Example 1-1. The sample standalone window
+
+import java.lang as lang
+import javax.swing as swing
+import java.awt as awt
+
+names = ["Groucho", "Chico", "Harpo"]
+quotes = {"Groucho": "Say the secret word", "Chico": "Viaduct?", "Harpo": "HONK!"}
+def buttonPressed(event):
+     field.text = quotes[event.source.text]
+
+def exit(event):
+    lang.System.exit(0)
+
+def createButton(name):
+    return swing.JButton(name, preferredSize=(100,20),
+        actionPerformed=buttonPressed)
+
+win = swing.JFrame("Welcome to Jython", size=(200, 200),windowClosing=exit)
+win.contentPane.layout = awt.FlowLayout( )
+
+field = swing.JTextField(preferredSize=(200,20))
+win.contentPane.add(field)
+
+buttons = [createButton(each) for each in names]
+for eachButton in buttons:
+    win.contentPane.add(eachButton)
+
+win.pack( )
+win.show( )
