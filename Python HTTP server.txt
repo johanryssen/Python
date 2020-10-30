@@ -41,20 +41,19 @@ httpd.serve_forever()
 openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 365
 
 
-## Twiseted as a Simple Web HTTP/S Server
-Another great example of a web server is Twiseted.
+## TWISTD as a Simple Web HTTP/S Server
 It is much faster than one built in Python and provides lots of features out of the box.
-It supports SSL without a need to write a single line of code. It supports both Python 3.x and 2.x.
+It supports SSL without a need to write a single line of code. Supports both Python 3.x and 2.x.
 
 # Installation
 pip install twisted
 apt-get -y install python-twisted-core
 
 # Usage
-# To run a twisted as a web server to serve current directory:
+# To run twistd as a web server to serve current directory:
 twistd -no web --port=8090
 
-You will see the output like follows:
+Output similar to:
 
 2017-04-27 20:59:36+1000 [-] Log opened.
 2017-04-27 20:59:36+1000 [-] twistd 16.0.0 (/usr/bin/python 2.7.12) starting up.
