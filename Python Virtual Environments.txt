@@ -9,8 +9,71 @@ $HOME/.bashrc
 
 . .bashrc
 
-mkvirtualenv -p /usr/bin/python3 readit
+mkvirtualenv -p /usr/bin/python3 myvenv
 
-workon readit
+workon myvenv
 
 deactivate
+
+
+
+----- Install -----
+
+apt install pythonpy virtualenv virtualenv-clone virtualenvwrapper python3-virtualenv python3-venv python3-dev
+apt-get update --fix-missing
+
+-or-
+
+pip install --user pipenv
+pip install virtualenvwrapper
+
+
+----- .vimrc -----
+
+set textwidth=79  " lines longer than 79 columns will be broken
+set shiftwidth=4  " operation >> indents 4 columns; << unindents 4 columns
+set tabstop=4     " a hard TAB displays as 4 columns
+set expandtab     " insert spaces when hitting TABs
+set softtabstop=4 " insert/delete 4 spaces when hitting a TAB/BACKSPACE
+set shiftround    " round indent to multiple of 'shiftwidth'
+set autoindent    " align the new line indent with the previous line
+
+----- Create Virtual Env -----
+
+# Syntax:
+python3 -m venv /path/to/new/virtual/environment
+
+
+[jo@server02 ~]$ python3 -m venv env
+[jo@server02 ~]$ source env/bin/activate
+(env) [jo@server02 ~]$
+(env) [jo@server02 ~]$ which python3
+/home/jo/env/bin/python3
+
+
+----- Installing Packages -----
+# Intstall some package:
+(env) [jo@server02 ~]$ pip install requests
+
+# pip can install packages directly from their version control system:
+git+https://github.com/GoogleCloudPlatform/google-auth-library-python.git#egg=google-auth
+
+
+----- Freezing dependencies -----
+
+# Pip can export a list of all installed packages and their versions using the freeze command:
+pip freeze > requirements.txt
+
+
+----- Using requirements files -----
+
+# Tell pip to install all of the packages in this file using the -r flag:
+pip install -r requirements.txt
+
+
+----- Exit venv -----
+
+(env) [jo@server02 ~]$ deactivate
+[jo@server02 ~]$
+
+---------------------
