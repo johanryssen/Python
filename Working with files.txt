@@ -1,0 +1,47 @@
+--- Read file content ---
+open() method - Load file
+Syntax: open(FILE_PATH, OPENING_MODE)
+File is loaded read-only mode ('r') by default.
+
+read() method - Read all content of the file.
+
+In [1]: with open("file01.txt") as f:
+   ...:     print(f.read())                
+   ...:  
+   
+line 1 of text
+line 2 of text
+
+readlines() method - Read content line by line.
+Saves contents to a list.
+
+In [2]: with open("file01.txt") as f:
+   ...:     print(f.readlines())                
+   ...:  
+["line 1 of text\n",  "line 2 of text\n"]
+
+
+--- Modify file content ---
+Load file in write ('w') mode.
+Second argument of the open() method.
+NB: Overwrites original content
+
+In [3]: with open("file01.txt", "w") as f:
+    ...:     f.write("Adding some text")          
+    ...: 
+In [4]: with open("file01.txt") as f:
+    ...:     print(f.read())          
+    ...: 
+Adding some text
+
+--- Append to file ---
+append ('a') mode
+
+In [5]: with open("file01.txt", "a") as f:
+    ...:     f.write("\nAppending text to file")          
+    ...: 
+In [6]: with open("file01.txt") as f:
+    ...:     print(f.read())          
+    ...: 
+Adding some text
+Appending text to file

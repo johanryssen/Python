@@ -1,0 +1,29 @@
+# Sending emails
+
+In [1]: import getpass
+In [2]: import smtplib
+In [3]: HOST = "smtp.gmail.com"
+In [4]: PORT = 465
+In [5]: username = "tempaccount@gmail.com"
+In [6]: password = getpass.getpass("gMail password: ")
+gMail password:
+In [7]: server = smtplib.SMTP_SSL(HOST, PORT)
+
+------------------
+getpass - Securely prompt for the password.
+smtplib - Establish a connection and send emails.
+HOST & PORT - required by Gmail.
+server - Stores SMTP object.
+SMTP_SSL() method - script starts a secure SMTP connection.
+------------------
+
+In [8]: server.login(username, password)                               
+Out[8]: (235, b’2.7.0 Accepted’)
+In [9]: server.sendmail(
+  ...:     “from@domain.com”,       
+  ...:      “to@domain.com”,
+  ...:     “This is a Test email”,
+  ...:     )
+Out[9]: {}
+In [8]: server.quit()                          
+Out[8]: (221, b’2.0.0 closing connection s1sm45873401ltx.4 - gsmtp’)
