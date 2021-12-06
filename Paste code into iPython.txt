@@ -1,4 +1,5 @@
 To paste code into iPython:
+
 %cpaste
 
 You can't copy to iPython directly. These are the steps:
